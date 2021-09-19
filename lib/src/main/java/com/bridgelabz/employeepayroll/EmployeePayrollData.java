@@ -5,6 +5,7 @@ public class EmployeePayrollData {
 	double employeeSalary;
 	
 	public EmployeePayrollData(Integer id, String name, Double salary) {
+		
 		this.employeeId = id;
 		this.employeeName = name;
 		this.employeeSalary = salary;
@@ -12,6 +13,7 @@ public class EmployeePayrollData {
 	
 	@Override
 	public String toString() {
-		return "Employee Details: \nEmployee Id: "+employeeId+"\nEmployee Name: "+employeeName+"\nEmployee Salary: "+employeeSalary;
+		
+		return "\nEmployee Details: \nEmployee Id: "+employeeId+"\nEmployee Name: "+employeeName+"\nEmployee Salary: "+employeeSalary;
 	}
 }
