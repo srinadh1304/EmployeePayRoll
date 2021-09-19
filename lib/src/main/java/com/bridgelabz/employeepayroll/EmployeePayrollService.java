@@ -45,9 +45,22 @@ public class EmployeePayrollService {
 
 
 	public long countEntries(IOService fileIo) {
-		if(fileIo.equals(IOService.FILE_IO)) return new EmployeePayrollFileIOService().countEntries();
+		if(fileIo.equals(IOService.FILE_IO)) 
+			return new EmployeePayrollFileIOService().countEntries();
 		
 		return 0;
+	}
+	
+	
+	public long readDataFromFile(IOService fileIo) {
+		
+		List<String> employeePayrollFromFile = new ArrayList<String>();
+		if(fileIo.equals(IOService.FILE_IO)) {
+			System.out.println("Employee Details from payroll-file.txt");
+			employeePayrollFromFile = new EmployeePayrollFileIOService().readDataFromFile();
+			
+		}
+		return employeePayrollFromFile.size();
 	}
 	
 	public static void main(String[] args) {
@@ -58,8 +71,6 @@ public class EmployeePayrollService {
 		Scanner consoleInputReader = new Scanner(System.in);
 		
 		employeePayrollService.readEmployeePayrollData(consoleInputReader);
-		employeePayrollService.writeEmployeePayrollData(IOService.CONSOLE_IO);
-		
+		employeePayrollService.writeEmployeePayrollData(IOService.CONSOLE_IO);		
 	}
-
 }
