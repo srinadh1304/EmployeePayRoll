@@ -1,4 +1,5 @@
 package com.bridgelabz.employeepayroll;
+
 public class EmployeePayrollData {
 	int employeeId;
 	String employeeName;
@@ -14,6 +15,6 @@ public class EmployeePayrollData {
 	@Override
 	public String toString() {
 		
-		return "\nEmployee Details: \nEmployee Id: "+employeeId+"\nEmployee Name: "+employeeName+"\nEmployee Salary: "+employeeSalary;
+		return "Employee Details: Employee Id: "+employeeId+", Employee Name: "+employeeName+", Employee Salary: "+employeeSalary;
 	}
 }
