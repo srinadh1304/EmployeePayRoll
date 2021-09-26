@@ -1,3 +1,3 @@
-Employee Details: Employee Id: 1, Employee Name: Jeff Bezos, Employee Salary: 100000.0
-Employee Details: Employee Id: 2, Employee Name: Bill Gates, Employee Salary: 200000.0
-Employee Details: Employee Id: 3, Employee Name: Mark Zuckerberg, Employee Salary: 300000.0
+EmployeePayrollData [id=1, emp_id=null, name=Jeff Bezos, salary=10000.0, phoneNumber=null, gender=null, startDate=null]
+EmployeePayrollData [id=2, emp_id=null, name=Bill Gates, salary=20000.0, phoneNumber=null, gender=null, startDate=null]
+EmployeePayrollData [id=3, emp_id=null, name=Mark Zuckerberg, salary=30000.0, phoneNumber=null, gender=null, startDate=null]
