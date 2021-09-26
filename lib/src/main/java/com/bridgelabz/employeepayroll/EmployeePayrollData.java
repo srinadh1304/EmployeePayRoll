@@ -1,20 +1,26 @@
 package com.bridgelabz.employeepayroll;
 
+
+import java.time.LocalDate;
+
 public class EmployeePayrollData {
-	int employeeId;
-	String employeeName;
-	double employeeSalary;
+	public int id;
+	public String name;
+	public double salary;
+	public LocalDate startDate;
 	
-	public EmployeePayrollData(Integer id, String name, Double salary) {
-		
-		this.employeeId = id;
-		this.employeeName = name;
-		this.employeeSalary = salary;
+	public EmployeePayrollData(Integer id, String name, double salary) {
+		this.id = id;
+		this.name = name;
+		this.salary =salary;
 	}
-	
+	public EmployeePayrollData(Integer id, String name, double salary, LocalDate startDate) {
+		this(id,name,salary);
+		this.startDate = startDate;
+	}
 	@Override
 	public String toString() {
-		
-		return "Employee Details: Employee Id: "+employeeId+", Employee Name: "+employeeName+", Employee Salary: "+employeeSalary;
+		return "id: "+this.id+" name: "+this.name+" salary: "+this.salary;
 	}
+	
 }
