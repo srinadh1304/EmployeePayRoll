@@ -4,15 +4,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.jdbc.Connection;
 import java.sql.*;
 
 public class EmployeePayrollDBService {
 
-
-	
 	public List<EmployeePayrollData> readData() {
-		String sql = "SELECT * FROM employee_payroll";
+		String sql = "SELECT * FROM employee";
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		try {
 			Connection connection = this.getConnection();
@@ -21,9 +18,8 @@ public class EmployeePayrollDBService {
 			while(result.next()) {
 				int id = result.getInt("id");
 				String name = result.getString("name");
-				double salary = result.getDouble("salary");
 				LocalDate startDate = result.getDate("start").toLocalDate();
-				employeePayrollList.add(new EmployeePayrollData(id, name, salary,startDate));
+				employeePayrollList.add(new EmployeePayrollData(id, name, startDate));
 			}
 			connection.close();
 		}
@@ -37,7 +33,7 @@ public class EmployeePayrollDBService {
 	{
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?userSSL=false";
 		String userName = "root";
-		String password = "Root$241";
+		String password = "Perfios@2021";
 		Connection connection;
 		System.out.println("Connecting to database:"+jdbcURL);
 		connection =  (Connection) DriverManager.getConnection(jdbcURL,userName,password);
