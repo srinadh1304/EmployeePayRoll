@@ -25,10 +25,5 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(3,entries);
 	}
 	
-	@Test
-	public void givenEmployeePayrollInDB_WhenRetrieved_ShouldMatchEmployeeCount(){
-		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
-		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
-		Assert.assertEquals(3, employeePayrollData.size());
-	}
+	
 }
