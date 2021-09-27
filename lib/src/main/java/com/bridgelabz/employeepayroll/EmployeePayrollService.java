@@ -20,9 +20,9 @@ public class EmployeePayrollService {
 	}
 	
 	private void readEmployeePayrollData(Scanner consoleInputReader) {
-		System.out.println("enter employee ID:");
+		System.out.println("Enter employee ID:");
 		int id = consoleInputReader.nextInt();
-		System.out.println("enter employee name :");
+		System.out.println("Enter employee name :");
 		String name  = consoleInputReader.next();
 		System.out.println("Enter employee salary: ");
 		double salary = consoleInputReader.nextDouble();
