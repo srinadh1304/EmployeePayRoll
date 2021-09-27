@@ -42,5 +42,23 @@ public class EmployeePayrollDBService {
 		return connection;
 	
 	}
+	public int updateEmployeeSalary(String name, double salary) {
+		return this.updateEmployeeDataUsingStatement(name,salary);
+	}
+	
+	private int updateEmployeeDataUsingStatement(String name,double salary) {
+		String sqlString = String.format("update employee_payroll set netPay = %2f where name = '%s';",salary,name);
+		try(Connection connection = this.getConnection()) {
+			Statement statement = connection.createStatement();
+			return statement.executeUpdate(sqlString);
+		
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	
+	}
+
 
 }
