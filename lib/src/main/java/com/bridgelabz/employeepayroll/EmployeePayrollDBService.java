@@ -9,7 +9,7 @@ import java.sql.*;
 public class EmployeePayrollDBService {
 
 	public List<EmployeePayrollData> readData() {
-		String sql = "SELECT * FROM employee";
+		String sql = "SELECT * FROM employee_payroll";
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		try {
 			Connection connection = this.getConnection();
@@ -18,8 +18,9 @@ public class EmployeePayrollDBService {
 			while(result.next()) {
 				int id = result.getInt("id");
 				String name = result.getString("name");
+				double salary = result.getDouble("netPay");
 				LocalDate startDate = result.getDate("start").toLocalDate();
-				employeePayrollList.add(new EmployeePayrollData(id, name, startDate));
+				employeePayrollList.add(new EmployeePayrollData(id, name, salary,startDate));
 			}
 			connection.close();
 		}
@@ -41,24 +42,5 @@ public class EmployeePayrollDBService {
 		return connection;
 	
 	}
-	
-	public int updateEmployeeSalary(String name, double salary) {
-		return this.updateEmployeeDataUsingStatement(name,salary);
-	}
-	
-	private int updateEmployeeDataUsingStatement(String name,double salary) {
-		String sqlString = String.format("update employee_payroll set salary = %2f where name = '%s';",salary,name);
-		try(Connection connection = this.getConnection()) {
-			Statement statement = connection.createStatement();
-			return statement.executeUpdate(sqlString);
-		
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	
-	}
-
 
 }
