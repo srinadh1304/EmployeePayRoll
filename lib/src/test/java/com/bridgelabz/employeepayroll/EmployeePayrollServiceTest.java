@@ -59,6 +59,14 @@ public class EmployeePayrollServiceTest {
 		System.out.println(employeePayrollData.get(size));
 	}
 	@Test
+	public void givenDateRange_WhenQueried_ShouldReturnEmployeeList()
+	{
+		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
+		List<EmployeePayrollData> empList = employeePayrollService.getEmployeesInDateRange("2019-01-01","2021-01-01");
+		System.out.println(empList);
+		Assert.assertEquals(3, empList.size());
+	}
+	@Test
 	@AfterAll
 	public void givenListOfEmployees_WhenInsertedToList_ShouldMatchEmployeeEntries() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -78,4 +86,5 @@ public class EmployeePayrollServiceTest {
 		long entries = employeePayrollService.countEntries(DB_IO);
 		Assert.assertEquals(6,entries);
 	}
+	
 }
