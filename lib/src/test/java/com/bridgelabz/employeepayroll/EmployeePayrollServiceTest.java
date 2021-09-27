@@ -46,8 +46,10 @@ public class EmployeePayrollServiceTest {
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataDB(DB_IO);
 		employeePayrollService.updateEmployeeSalary("Terisa",300000000.00);
 		employeePayrollData = employeePayrollService.readEmployeePayrollDataDB(DB_IO);
-		System.out.println(employeePayrollData);
+		for(int size=0;size<employeePayrollData.size();size++)
+		System.out.println(employeePayrollData.get(size));
 	}
+	
 	@Test
 	@AfterAll
 	public void givenListOfEmployees_WhenInsertedToList_ShouldMatchEmployeeEntries() {
@@ -67,5 +69,13 @@ public class EmployeePayrollServiceTest {
 		employeePayrollService.writeEmployeePayrollData(DB_IO);
 		long entries = employeePayrollService.countEntries(DB_IO);
 		Assert.assertEquals(6,entries);
+	}
+	@Test
+	public void givenEmployee_database_ShouldRetrieve_All_the_Entries()
+	{
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataDB(DB_IO);
+		for(int size=0;size<employeePayrollData.size();size++)
+		System.out.println(employeePayrollData.get(size));
 	}
 }
