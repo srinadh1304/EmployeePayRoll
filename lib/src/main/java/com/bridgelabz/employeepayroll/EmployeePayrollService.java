@@ -4,10 +4,11 @@ import java.util.*;
 
 public class EmployeePayrollService {
 	public enum IOService {CONSOLE_IO, FILE_IO, DB_IO, REST_IO};
-	private List<EmployeePayrollData> employeePayrollList;
-	
-	public EmployeePayrollService() {}
-	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
+	public List<EmployeePayrollData> employeePayrollList;
+	private EmployeePayrollDBService employeePayrollDBService;
+	public EmployeePayrollService() {
+		employeePayrollDBService = EmployeePayrollDBService.getInstance();
+	}public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) {
 		this.employeePayrollList = employeePayrollList;
 	}
 	
@@ -82,5 +83,9 @@ public class EmployeePayrollService {
 			return new EmployeePayrollDBService().countEntries();
 		}
 		return 0;
+	}
+	public boolean checkEmployeePayrollInsyncWithDB(String name) {
+		List<EmployeePayrollData> employeePayrollDataList =  employeePayrollDBService.getEmployeePayrollData(name);
+		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 }
