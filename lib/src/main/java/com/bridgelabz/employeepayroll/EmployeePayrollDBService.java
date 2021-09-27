@@ -60,5 +60,38 @@ public class EmployeePayrollDBService {
 	
 	}
 
-
+	public void insertIntoDB(List<EmployeePayrollData> employees) {
+		employees.stream().forEach(employee ->{
+			String sql = String.format("INSERT INTO employee_payroll(name,gender,basicPay,start)VALUES('%s','%s','%2f','%s')",employee.name,employee.gender,
+										employee.salary,employee.startDate.toString());
+			try {
+				Connection connection = this.getConnection();
+				Statement statement = connection.createStatement();
+			    statement.executeUpdate(sql);
+				connection.close();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		
+	}
+	
+	public int countEntries() {
+		String sql = "SELECT * FROM employee_payroll";
+		int count  =0;
+		try {
+			Connection connection = this.getConnection();
+			Statement statement = connection.createStatement();
+			ResultSet result = statement.executeQuery(sql);
+			while(result.next()) {
+				count++;
+			}
+			connection.close();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
 }
