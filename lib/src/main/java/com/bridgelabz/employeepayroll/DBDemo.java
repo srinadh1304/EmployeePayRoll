@@ -7,17 +7,10 @@ import java.sql.*;
 
 public class DBDemo {
 	public static void main(String [] args) {
-		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
+		String jdbcURL = "jdbc:mysql://localhost:3306/payroll?useSSL=false";
 		String userName = "root";
 		String password = "Perfios@2021";
 		Connection connection;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			System.out.println("Driver loaded!");
-		}
-		catch(ClassNotFoundException e) {
-			throw new IllegalStateException("Cannot find the driver in the classpath",e);
-		}
 		
 		listDrivers();
 	
