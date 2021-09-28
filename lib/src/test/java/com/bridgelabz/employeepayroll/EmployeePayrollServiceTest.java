@@ -72,8 +72,8 @@ public class EmployeePayrollServiceTest {
 		
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		Map<Character, Double> salaryMap = employeePayrollService.getGenderWiseTotalSalary();
-		Assert.assertEquals((double)salaryMap.get('F'),103000,0.0);
-		Assert.assertEquals((double)salaryMap.get('M'),500000,0.0);
+		Assert.assertEquals((double)salaryMap.get('F'),3000,0.0);
+		Assert.assertEquals((double)salaryMap.get('M'),900000,0.0);
 	}
 	
 	@Test
@@ -81,7 +81,7 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		Map<Character, Double> salaryMap = employeePayrollService.getGenderWiseMinSalary();
 		Assert.assertEquals((double)salaryMap.get('F'),3000,0.0);
-		Assert.assertEquals((double)salaryMap.get('M'),200000,0.0);
+		Assert.assertEquals((double)salaryMap.get('M'),100000,0.0);
 		
 	}
 	
@@ -89,8 +89,8 @@ public class EmployeePayrollServiceTest {
 	public void givenEmployeePayrollInDB_ShouldReturnAverageSalaryBasedOnGender() {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		Map<Character, Double> salaryMap = employeePayrollService.getGenderWiseAvgSalary();
-		Assert.assertEquals((double)salaryMap.get('F'),51500,0.0);
-		Assert.assertEquals((double)salaryMap.get('M'),200000,0.0);
+		Assert.assertEquals((double)salaryMap.get('F'),3000,0.0);
+		Assert.assertEquals((double)salaryMap.get('M'),250000,0.0);
 		
 	}
 	
@@ -98,8 +98,8 @@ public class EmployeePayrollServiceTest {
 	public void givenEmployeePayrollInDB_ShouldReturnMaximumSalaryBasedOnGender() {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		Map<Character, Double> salaryMap = employeePayrollService.getGenderWiseMaxSalary();
-		Assert.assertEquals((double)salaryMap.get('F'),100000,0.0);
-		Assert.assertEquals((double)salaryMap.get('M'),300000,0.0);
+		Assert.assertEquals((double)salaryMap.get('F'),3000,0.0);
+		Assert.assertEquals((double)salaryMap.get('M'),500000,0.0);
 		
 	}
 	
@@ -107,8 +107,8 @@ public class EmployeePayrollServiceTest {
 	public void givenEmployeePayrollInDB_ShouldReturnCountOfBasedOnGender() {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		Map<Character, Integer> countMap = employeePayrollService.getGenderWiseCount();
-		Assert.assertEquals((int)countMap.get('F'),2);
-		Assert.assertEquals((int)countMap.get('M'),3);
+		Assert.assertEquals((int)countMap.get('F'),1);
+		Assert.assertEquals((int)countMap.get('M'),4);
 		
 	}
 
