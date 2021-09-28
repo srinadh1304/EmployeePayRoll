@@ -37,7 +37,7 @@ public class EmployeePayrollServiceTest {
 	{
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataDB(DB_IO);
-		Assert.assertEquals(4, employeePayrollData.size());
+		Assert.assertEquals(5, employeePayrollData.size());
 	}
 	@Test
 	public void givenNewSalaryForEmpoyee_WhenUpdated_ShouldSyncWithDB()
@@ -64,7 +64,7 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		List<EmployeePayrollData> empList = employeePayrollService.getEmployeesInDateRange("2019-01-01","2021-01-01");
 		System.out.println(empList);
-		Assert.assertEquals(3, empList.size());
+		Assert.assertEquals(4, empList.size());
 	}
 	
 	@Test
@@ -90,7 +90,7 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		Map<Character, Double> salaryMap = employeePayrollService.getGenderWiseAvgSalary();
 		Assert.assertEquals((double)salaryMap.get('F'),51500,0.0);
-		Assert.assertEquals((double)salaryMap.get('M'),250000,0.0);
+		Assert.assertEquals((double)salaryMap.get('M'),200000,0.0);
 		
 	}
 	
@@ -108,27 +108,19 @@ public class EmployeePayrollServiceTest {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
 		Map<Character, Integer> countMap = employeePayrollService.getGenderWiseCount();
 		Assert.assertEquals((int)countMap.get('F'),2);
-		Assert.assertEquals((int)countMap.get('M'),2);
+		Assert.assertEquals((int)countMap.get('M'),3);
 		
 	}
+
 	@Test
 	@AfterAll
-	public void givenListOfEmployees_WhenInsertedToList_ShouldMatchEmployeeEntries() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	public void givenListOfEmployees_WhenInserted_ShouldMatchEmployeeEntries() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 		String date = "16/08/2019";
-		LocalDate startDate1 = LocalDate.parse(date, formatter);
-		date = "01/08/2020";
-		LocalDate startDate2 = LocalDate.parse(date, formatter);
-
-		EmployeePayrollData[] arrayOfEmps = {
-				new EmployeePayrollData(5, "Jeff Bezos",'M', 10000,startDate1),
-				new EmployeePayrollData(6, "Bill Gates",'M', 20000,startDate2)
-		};
-		
-		EmployeePayrollService employeePayrollService;
-		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
-		employeePayrollService.writeEmployeePayrollData(DB_IO);
-		long entries = employeePayrollService.countEntries(DB_IO);
-		Assert.assertEquals(6,entries);
+		LocalDate startDate = LocalDate.parse(date, formatter);
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(new ArrayList<>()); 
+		employeePayrollService.addEmployeeToPayroll("arun",100000.00,startDate,'M' );
+		boolean result = employeePayrollService.checkEmployeePayrollInsyncWithDB("arun");
+		Assert.assertTrue(result);
 	}
 }
