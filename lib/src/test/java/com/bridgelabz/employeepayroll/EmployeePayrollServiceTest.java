@@ -102,7 +102,18 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals((double)salaryMap.get('M'),500000,0.0);
 		
 	}
-	
+	@Test
+	public void givenDepartment_WhenInserted_ShouldReturnOne(){
+		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
+		int result = employeePayrollService.insertDepartment(new Department( "D004","Engineering" ,"Virat"));
+		Assert.assertEquals(1,result);
+	}
+	@Test
+	public void givenCompany_WhenInserted_ShouldReturnOne(){
+		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
+		int result = employeePayrollService.insertCompany(new Company( "Uber","3"));
+		Assert.assertEquals(1,result);
+	}
 	@Test
 	public void givenEmployeePayrollInDB_ShouldReturnCountOfBasedOnGender() {
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();

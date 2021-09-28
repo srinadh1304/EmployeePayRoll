@@ -183,7 +183,7 @@ public class EmployeePayrollDBService {
 	}
 	public int insertCompany(Company company) {
 		int result = 0;
-			String sql = String.format("INSERT INTO company(company_name,company_id)VALUES('%s',%d)",company.getCompanyName(),company.getCompanyId());
+			String sql = String.format("INSERT INTO company(company_name,company_id)VALUES('%s','%s')",company.getCompanyName(),company.getCompanyId());
 			try {
 				Connection connection = this.getConnection();
 				Statement statement = connection.createStatement();
