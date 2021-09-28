@@ -52,7 +52,7 @@ public class EmployeePayrollDBService {
 		catch(Exception e) {
 			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.FAILED_TO_CONNECT, "couldn't establish connection");
 		}
-		
+
 		try (Statement statement = connection.createStatement();){
 			String sql = String.format("INSERT INTO employee_payroll(name,gender,salary,start)VALUES('%s','%s','%2f','%s')",name,gender,
 					salary,startDate.toString());
@@ -70,7 +70,7 @@ public class EmployeePayrollDBService {
 			}
 			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "query execution failed");
 		}
-		
+
 		try(Statement statement = connection.createStatement();){
 			double deductions = salary * 0.2;
 			double taxablePay = salary - deductions;
@@ -88,7 +88,7 @@ public class EmployeePayrollDBService {
 				connection.rollback();
 			} 
 			catch (SQLException e1) {
-				
+
 				e1.printStackTrace();
 			}
 			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "query execution failed");
@@ -109,7 +109,7 @@ public class EmployeePayrollDBService {
 		return employeePayrollData;
 	}
 	public List<EmployeePayrollData> readData() {
-		String sql = "SELECT * from employee e , payroll p where e.id = p.employee_id;";
+		String sql = "SELECT * from employee_payroll e , payroll_details p where e.id = p.employee_id;";
 		HashMap<Integer,ArrayList<Department>> departmentList = getDepartmentList();
 		HashMap<Integer, Company> companyMap = getCompany();
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
@@ -117,18 +117,7 @@ public class EmployeePayrollDBService {
 			Connection connection = this.getConnection();
 			Statement statement = connection.createStatement();
 			ResultSet resultSet = statement.executeQuery(sql);
-			while(resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String name = resultSet.getString("name");
-				char gender = resultSet.getString("gender").charAt(0);
-				double basicSalary = resultSet.getDouble("basicPay");
-				LocalDate startDate = resultSet.getDate("start").toLocalDate();
-				String phoneNumber = String.valueOf(resultSet.getLong("phoneNumber"));
-				int company_id = resultSet.getInt("company_id");
-				String address = resultSet.getString("address");
-				employeePayrollList.add(new EmployeePayrollData(id, name, gender, basicSalary, address, phoneNumber, startDate,companyMap.get(company_id) , departmentList.get(id)));
-			}
-			
+			employeePayrollList=getEmployeePayrollData(resultSet);
 			connection.close();
 		}
 		catch(SQLException e) {
@@ -136,6 +125,7 @@ public class EmployeePayrollDBService {
 		}
 		return employeePayrollList;
 	}
+
 	private HashMap<Integer,Company> getCompany(){
 		HashMap<Integer, Company> companyMap = new HashMap<>();
 		String sql = "select * from company";
@@ -153,7 +143,7 @@ public class EmployeePayrollDBService {
 		}
 		return companyMap;
 	}
-	
+
 	private HashMap<Integer,ArrayList<Department>> getDepartmentList(){
 		HashMap<Integer,ArrayList<Department>> departmentList = new HashMap<>();
 		String sql = "select * from employee_department";
@@ -173,7 +163,7 @@ public class EmployeePayrollDBService {
 		}
 		return departmentList;
 	}
-	
+
 	private HashMap<String,Department> getDepartment(){
 		String sql = "select * from department";
 		HashMap<String,Department> set = new HashMap<>();
@@ -192,7 +182,6 @@ public class EmployeePayrollDBService {
 		}
 		return set;
 	}
-
 	public Connection getConnection() throws SQLException
 	{
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll?userSSL=false";
@@ -211,17 +200,16 @@ public class EmployeePayrollDBService {
 	}
 
 	private int updateEmployeeDataUsingStatement(String name,double salary) {
-		String sqlString = String.format("update employee_payroll set salary = %2f where name = '%s';",salary,name);
+		String sqlString = String.format("update employee_payroll set salary = %2f where name = '%s' ;",salary,name);
 		try(Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			return statement.executeUpdate(sqlString);
-
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
+			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.UPDATE_FAILED, "Failed to update the given data");
 		}
-		return 0;
-
+	
 	}
 
 	public void insertIntoDB(List<EmployeePayrollData> employees) {
@@ -276,6 +264,8 @@ public class EmployeePayrollDBService {
 	}
 
 	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) {
+		HashMap<Integer,ArrayList<Department>> departmentList = getDepartmentList();
+		HashMap<Integer, Company> companyMap = getCompany();
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 
 		try {
@@ -285,7 +275,7 @@ public class EmployeePayrollDBService {
 				char gender = resultSet.getString("gender").charAt(0);
 				double basicSalary = resultSet.getDouble("salary");
 				LocalDate startDate = resultSet.getDate("start").toLocalDate();
-				employeePayrollList.add(new EmployeePayrollData(id, name, gender,basicSalary, startDate));
+				employeePayrollList.add(new EmployeePayrollData(id, name, gender, basicSalary, startDate,companyMap.get(id) , departmentList.get(id)));
 			}
 		}
 		catch(SQLException e) {
@@ -297,7 +287,7 @@ public class EmployeePayrollDBService {
 	private void prepareStatementForEmployeeData() {
 		try {
 			Connection connection = this.getConnection();
-			String sqlStatement = "select * from employee_payroll where name = ?;";
+			String sqlStatement = "select * from employee_payroll e, payroll_details p where e.id = p.employee_id and name = ?;";
 			employeePayrollDataStatement = connection.prepareStatement(sqlStatement);
 		}
 		catch(SQLException e) {
@@ -337,7 +327,7 @@ public class EmployeePayrollDBService {
 		}	
 		return salaryMap;
 	}
-	
+
 	public HashMap<Character, Double> getGenderWiseMinSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
 		String sql = "SELECT gender , MIN(salary) as 'MIN'  FROM employee_payroll GROUP BY gender;";
@@ -355,7 +345,7 @@ public class EmployeePayrollDBService {
 		}	
 		return salaryMap;
 	}
-	
+
 	public HashMap<Character, Double> getGenderWiseMaxSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
 		String sql = "SELECT gender , MAX(salary) as 'MAX'  FROM employee_payroll GROUP BY gender;";
@@ -373,7 +363,7 @@ public class EmployeePayrollDBService {
 		}	
 		return salaryMap;
 	}
-	
+
 	public HashMap<Character, Double> getGenderWiseAvgSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
 		String sql = "SELECT gender , AVG(salary) as 'AVG'  FROM employee_payroll GROUP BY gender;";
@@ -391,7 +381,7 @@ public class EmployeePayrollDBService {
 		}	
 		return salaryMap;
 	}
-	
+
 	public HashMap<Character, Integer> getGenderWiseCount(){
 		HashMap<Character,Integer> countMap = new HashMap<>();
 		String sql = "SELECT gender , COUNT(salary) as 'COUNT'  FROM employee_payroll GROUP BY gender;";
