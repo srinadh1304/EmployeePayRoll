@@ -1,5 +1,7 @@
 package com.bridgelabz.employeepayroll;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeePayrollData {
 	public int id;
@@ -7,6 +9,11 @@ public class EmployeePayrollData {
 	public double salary;
 	public LocalDate startDate;
 	public char gender;
+	public String phoneNumber;
+	public String address;
+	public Company company;
+	public List<Department> departments;
+
 	public EmployeePayrollData(Integer id, String name, double salary) {
 		this.id = id;
 		this.name = name;
@@ -32,6 +39,13 @@ public class EmployeePayrollData {
 		this.name = name;
 		this.salary = salary;
 		this.startDate = startDate;
+	}
+	public EmployeePayrollData(Integer id, String name, char gender,  double salary, String address, String phoneNumber, LocalDate startDate, Company company, List<Department> departments) {
+		this(id,name,gender,salary,startDate);
+		this.address = address;
+		this.phoneNumber = phoneNumber;
+		this.company = company;
+		this.departments = departments;
 	}
 	@Override
 	public boolean equals( Object obj) {
