@@ -119,7 +119,7 @@ public class EmployeePayrollServiceTest {
 		String date = "16/08/2019";
 		LocalDate startDate = LocalDate.parse(date, formatter);
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(new ArrayList<>()); 
-		employeePayrollService.addEmployeeToPayroll("arun",100000.00,startDate,'M' );
+		employeePayrollService.addEmployeeToPayroll("arun",100000.00,startDate,'M',"1","1" );
 		boolean result = employeePayrollService.checkEmployeePayrollInsyncWithDB("arun");
 		Assert.assertTrue(result);
 	}
