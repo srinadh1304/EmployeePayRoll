@@ -91,7 +91,7 @@ public class EmployeePayrollService {
 		List<EmployeePayrollData> employeePayrollDataList =  employeePayrollDBService.getEmployeePayrollData(name);
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
-	public void addEmployeeToPayroll(String name, Double salary, LocalDate startDate,char gender,String address, String phoneNumber, String deptId, String companyId) {
+	public void addEmployeeToPayroll(String name, Double salary, LocalDate startDate,char gender,String deptId,String companyId) {
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name,salary,startDate,gender,deptId,companyId));
 	}
 }
