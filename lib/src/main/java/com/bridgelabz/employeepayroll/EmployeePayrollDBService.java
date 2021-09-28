@@ -163,7 +163,7 @@ public class EmployeePayrollDBService {
 		return employeePayrollList;
 	}
 
-	public HashMap<Character, Double> getGenderWiseTotalSalary() throws EmployeePayrollException{
+	public HashMap<Character, Double> getGenderWiseTotalSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
 		String sql = "SELECT gender , SUM(basicPay) as 'SUM'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
@@ -181,7 +181,7 @@ public class EmployeePayrollDBService {
 		return salaryMap;
 	}
 	
-	public HashMap<Character, Double> getGenderWiseMinSalary() throws EmployeePayrollException{
+	public HashMap<Character, Double> getGenderWiseMinSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
 		String sql = "SELECT gender , MIN(basicPay) as 'MIN'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
@@ -199,7 +199,7 @@ public class EmployeePayrollDBService {
 		return salaryMap;
 	}
 	
-	public HashMap<Character, Double> getGenderWiseMaxSalary() throws EmployeePayrollException{
+	public HashMap<Character, Double> getGenderWiseMaxSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
 		String sql = "SELECT gender , MAX(basicPay) as 'MAX'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
@@ -217,7 +217,7 @@ public class EmployeePayrollDBService {
 		return salaryMap;
 	}
 	
-	public HashMap<Character, Double> getGenderWiseAvgSalary() throws EmployeePayrollException{
+	public HashMap<Character, Double> getGenderWiseAvgSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
 		String sql = "SELECT gender , AVG(basicPay) as 'AVG'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
@@ -235,7 +235,7 @@ public class EmployeePayrollDBService {
 		return salaryMap;
 	}
 	
-	public HashMap<Character, Integer> getGenderWiseCount() throws EmployeePayrollException{
+	public HashMap<Character, Integer> getGenderWiseCount(){
 		HashMap<Character,Integer> countMap = new HashMap<>();
 		String sql = "SELECT gender , COUNT(basicPay) as 'COUNT'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
