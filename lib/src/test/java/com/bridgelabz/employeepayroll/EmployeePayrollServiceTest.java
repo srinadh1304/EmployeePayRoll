@@ -37,7 +37,7 @@ public class EmployeePayrollServiceTest {
 	{
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataDB(DB_IO);
-		Assert.assertEquals(5, employeePayrollData.size());
+		Assert.assertEquals(3, employeePayrollData.size());
 	}
 	@Test
 	public void givenNewSalaryForEmpoyee_WhenUpdated_ShouldSyncWithDB()
