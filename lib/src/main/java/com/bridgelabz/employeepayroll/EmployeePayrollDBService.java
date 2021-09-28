@@ -76,8 +76,8 @@ public class EmployeePayrollDBService {
 		}
 
 		try (Statement statement = connection.createStatement();){
-			String sql = String.format("INSERT INTO employee_payroll(company_id,name,gender,start)VALUES(%d,'%s','%s','%s',%d,'%s')",companyId,name,
-					gender, startDate.toString());
+			String sql = String.format("INSERT INTO employee_payroll(name,gender,start,salary)VALUES('%s','%s','%s','%2f')",name,
+					gender, startDate.toString(),salary);
 
 			int result = statement.executeUpdate(sql,statement.RETURN_GENERATED_KEYS);
 			if(result == 1) {
@@ -134,7 +134,7 @@ public class EmployeePayrollDBService {
 	public List<EmployeePayrollData> readData() {
 		String sql = "SELECT * from employee_payroll e , payroll_details p where e.id = p.employee_id;";
 		HashMap<Integer,ArrayList<Department>> departmentList = getDepartmentList();
-		HashMap<Integer, Company> companyMap = getCompany();
+		HashMap<String, Company> companyMap = getCompany();
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		try {
 			Connection connection = this.getConnection();
@@ -149,14 +149,14 @@ public class EmployeePayrollDBService {
 		return employeePayrollList;
 	}
 
-	private HashMap<Integer,Company> getCompany(){
-		HashMap<Integer, Company> companyMap = new HashMap<>();
+	private HashMap<String, Company> getCompany(){
+		HashMap<String, Company> companyMap = new HashMap<>();
 		String sql = "select * from company";
 		try(Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
 			while(result.next()) {
-				int id  = result.getInt("company_id");
+				String id  = result.getString("company_id");
 				String name  = result.getString("company_name");
 				companyMap.put(id, new Company(name, id));
 			}
@@ -288,7 +288,7 @@ public class EmployeePayrollDBService {
 
 	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) {
 		HashMap<Integer,ArrayList<Department>> departmentList = getDepartmentList();
-		HashMap<Integer, Company> companyMap = getCompany();
+		HashMap<String, Company> companyMap = getCompany();
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 
 		try {
