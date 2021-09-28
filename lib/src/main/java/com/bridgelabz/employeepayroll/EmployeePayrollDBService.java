@@ -19,7 +19,7 @@ public class EmployeePayrollDBService {
 		}
 		return employeePayrollDBService;
 	}
-	public EmployeePayrollData addEmployeeToPayroll(String name, Double salary, LocalDate startDate, char gender) {
+	public EmployeePayrollData addEmployeeToPayrollUC7(String name, Double salary, LocalDate startDate, char gender) {
 		int employeeID = -1;
 		EmployeePayrollData employeePayrollData = null;
 		String sql = String.format("INSERT INTO employee_payroll(name,gender,basicPay,start)VALUES('%s','%s','%2f','%s')",name,gender,
@@ -39,6 +39,73 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 		System.out.println(employeePayrollData);
+		return employeePayrollData;
+	}
+	public EmployeePayrollData addEmployeeToPayroll(String name, Double salary, LocalDate startDate, char gender) {
+		int employeeID = -1;
+		EmployeePayrollData employeePayrollData = null;
+		Connection connection = null;
+		try {
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
+		}
+		catch(Exception e) {
+			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.FAILED_TO_CONNECT, "couldn't establish connection");
+		}
+		
+		try (Statement statement = connection.createStatement();){
+			String sql = String.format("INSERT INTO employee_payroll(name,gender,salary,start)VALUES('%s','%s','%2f','%s')",name,gender,
+					salary,startDate.toString());
+			int result = statement.executeUpdate(sql,statement.RETURN_GENERATED_KEYS);
+			if(result == 1) {
+				ResultSet resultSet = statement.getGeneratedKeys();
+				if(resultSet.next()) employeeID = resultSet.getInt(1);
+			}
+		}
+		catch(SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "query execution failed");
+		}
+		
+		try(Statement statement = connection.createStatement();){
+			double deductions = salary * 0.2;
+			double taxablePay = salary - deductions;
+			double tax = taxablePay * 0.1;
+			double netPay = salary - tax;
+			String sql = String.format("INSERT INTO payroll_details(employee_id, basicPay, deductions, taxablePay, incomeTax, netPay)VALUES(%d,%2f,%2f,%2f,%2f,%2f)",
+					employeeID,salary,deductions,taxablePay,tax,netPay);
+			int result = statement.executeUpdate(sql);
+			if(result == 1) {
+				employeePayrollData = new EmployeePayrollData(employeeID, name, gender,salary, startDate);
+			}
+		}
+		catch(SQLException e) {
+			try {
+				connection.rollback();
+			} 
+			catch (SQLException e1) {
+				
+				e1.printStackTrace();
+			}
+			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "query execution failed");
+		}
+		try {
+			connection.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			if(connection != null)
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
 		return employeePayrollData;
 	}
 	public List<EmployeePayrollData> readData() {
@@ -75,7 +142,7 @@ public class EmployeePayrollDBService {
 	}
 
 	private int updateEmployeeDataUsingStatement(String name,double salary) {
-		String sqlString = String.format("update employee_payroll set basicPay = %2f where name = '%s';",salary,name);
+		String sqlString = String.format("update employee_payroll set salary = %2f where name = '%s';",salary,name);
 		try(Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
 			return statement.executeUpdate(sqlString);
@@ -90,7 +157,7 @@ public class EmployeePayrollDBService {
 
 	public void insertIntoDB(List<EmployeePayrollData> employees) {
 		employees.stream().forEach(employee ->{
-			String sql = String.format("INSERT INTO employee_payroll(name,gender,basicPay,start)VALUES('%s','%s','%2f','%s')",employee.name,employee.gender,
+			String sql = String.format("INSERT INTO employee_payroll(name,gender,salary,start)VALUES('%s','%s','%2f','%s')",employee.name,employee.gender,
 					employee.salary,employee.startDate.toString());
 			try {
 				Connection connection = this.getConnection();
@@ -147,7 +214,7 @@ public class EmployeePayrollDBService {
 				int id = resultSet.getInt("id");
 				String name = resultSet.getString("name");
 				char gender = resultSet.getString("gender").charAt(0);
-				double basicSalary = resultSet.getDouble("basicPay");
+				double basicSalary = resultSet.getDouble("salary");
 				LocalDate startDate = resultSet.getDate("start").toLocalDate();
 				employeePayrollList.add(new EmployeePayrollData(id, name, gender,basicSalary, startDate));
 			}
@@ -186,7 +253,7 @@ public class EmployeePayrollDBService {
 
 	public HashMap<Character, Double> getGenderWiseTotalSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
-		String sql = "SELECT gender , SUM(basicPay) as 'SUM'  FROM employee_payroll GROUP BY gender;";
+		String sql = "SELECT gender , SUM(salary) as 'SUM'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
@@ -204,7 +271,7 @@ public class EmployeePayrollDBService {
 	
 	public HashMap<Character, Double> getGenderWiseMinSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
-		String sql = "SELECT gender , MIN(basicPay) as 'MIN'  FROM employee_payroll GROUP BY gender;";
+		String sql = "SELECT gender , MIN(salary) as 'MIN'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
@@ -222,7 +289,7 @@ public class EmployeePayrollDBService {
 	
 	public HashMap<Character, Double> getGenderWiseMaxSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
-		String sql = "SELECT gender , MAX(basicPay) as 'MAX'  FROM employee_payroll GROUP BY gender;";
+		String sql = "SELECT gender , MAX(salary) as 'MAX'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
@@ -240,7 +307,7 @@ public class EmployeePayrollDBService {
 	
 	public HashMap<Character, Double> getGenderWiseAvgSalary() {
 		HashMap<Character,Double> salaryMap = new HashMap<>();
-		String sql = "SELECT gender , AVG(basicPay) as 'AVG'  FROM employee_payroll GROUP BY gender;";
+		String sql = "SELECT gender , AVG(salary) as 'AVG'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
@@ -258,7 +325,7 @@ public class EmployeePayrollDBService {
 	
 	public HashMap<Character, Integer> getGenderWiseCount(){
 		HashMap<Character,Integer> countMap = new HashMap<>();
-		String sql = "SELECT gender , COUNT(basicPay) as 'COUNT'  FROM employee_payroll GROUP BY gender;";
+		String sql = "SELECT gender , COUNT(salary) as 'COUNT'  FROM employee_payroll GROUP BY gender;";
 		try(Connection connection = this.getConnection();) {
 			Statement statement = connection.createStatement();
 			ResultSet result = statement.executeQuery(sql);
