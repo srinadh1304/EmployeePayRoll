@@ -41,7 +41,7 @@ public class EmployeePayrollDBService {
 		System.out.println(employeePayrollData);
 		return employeePayrollData;
 	}
-	public EmployeePayrollData addEmployeeToPayroll(String name, Double salary, LocalDate startDate, char gender) {
+	public EmployeePayrollData addEmployeeToPayroll(String name, Double salary, LocalDate startDate, char gender,String departemntId, String companyId) {
 		int employeeID = -1;
 		EmployeePayrollData employeePayrollData = null;
 		Connection connection = null;
@@ -54,8 +54,31 @@ public class EmployeePayrollDBService {
 		}
 
 		try (Statement statement = connection.createStatement();){
-			String sql = String.format("INSERT INTO employee_payroll(name,gender,salary,start)VALUES('%s','%s','%2f','%s')",name,gender,
-					salary,startDate.toString());
+			String sql = String.format("select * from company where company_id = %s",companyId);
+			ResultSet result = statement.executeQuery(sql);
+			if(result.next() == false) {
+				throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "Company with id:"+companyId+" not present");
+			}
+		}
+		catch(SQLException e) {
+			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "query execution failed");
+		}
+
+		try (Statement statement = connection.createStatement();){
+			String sql = String.format("select * from department where department_id = '%s'",departemntId);
+			ResultSet result = statement.executeQuery(sql);
+			if(result.next() == false) {
+				throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "department with id:"+departemntId+" not present");
+			}
+		}
+		catch(SQLException e) {
+			throw new EmployeePayrollException(EmployeePayrollException.ExceptionType.CANNOT_EXECUTE_QUERY, "query execution failed");
+		}
+
+		try (Statement statement = connection.createStatement();){
+			String sql = String.format("INSERT INTO employee_payroll(company_id,name,gender,start)VALUES(%d,'%s','%s','%s',%d,'%s')",companyId,name,
+					gender, startDate.toString());
+
 			int result = statement.executeUpdate(sql,statement.RETURN_GENERATED_KEYS);
 			if(result == 1) {
 				ResultSet resultSet = statement.getGeneratedKeys();
