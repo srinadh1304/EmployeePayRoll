@@ -40,7 +40,7 @@ public class EmployeePayrollData {
 		this.salary = salary;
 		this.startDate = startDate;
 	}
-	public EmployeePayrollData(Integer id, String name, char gender,  double salary, String address, String phoneNumber, LocalDate startDate, Company company, List<Department> departments) {
+	public EmployeePayrollData(Integer id, String name, char gender,  double salary,LocalDate startDate, Company company, List<Department> departments) {
 		this(id,name,gender,salary,startDate);
 		this.address = address;
 		this.phoneNumber = phoneNumber;
