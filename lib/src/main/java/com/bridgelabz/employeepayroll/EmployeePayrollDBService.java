@@ -22,7 +22,7 @@ public class EmployeePayrollDBService {
 	public EmployeePayrollData addEmployeeToPayroll(String name, Double salary, LocalDate startDate, char gender) {
 		int employeeID = -1;
 		EmployeePayrollData employeePayrollData = null;
-		String sql = String.format("INSERT INTO employee_payroll(name,gender,salary,start)VALUES('%s','%s','%2f','%s')",name,gender,
+		String sql = String.format("INSERT INTO employee_payroll(name,gender,basicPay,start)VALUES('%s','%s','%2f','%s')",name,gender,
 				salary,startDate.toString());
 		try {
 			Connection connection = this.getConnection();
@@ -121,6 +121,22 @@ public class EmployeePayrollDBService {
 			e.printStackTrace();
 		}
 		return count;
+	}
+
+	public List<EmployeePayrollData> getEmployeePayrollData(String name) {
+		List<EmployeePayrollData> employeePayrollDataList = null;
+		if(this.employeePayrollDataStatement == null) {
+			this.prepareStatementForEmployeeData();
+		}
+		try {
+			employeePayrollDataStatement.setString(1, name);
+			ResultSet resultSet = employeePayrollDataStatement.executeQuery();
+			employeePayrollDataList = this.getEmployeePayrollData(resultSet);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return employeePayrollDataList;
 	}
 
 	private List<EmployeePayrollData> getEmployeePayrollData(ResultSet resultSet) {
