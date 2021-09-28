@@ -2,9 +2,9 @@ package com.bridgelabz.employeepayroll;
 
 public class Company {
 	private String companyName;
-	private int companyId;
+	private String companyId;
 	
-	public Company(String name, int id) {
+	public Company(String name, String id) {
 		this.setCompanyId(id);
 		this.setCompanyName(name);
 	}
@@ -17,11 +17,11 @@ public class Company {
 		this.companyName = companyName;
 	}
 
-	public int getCompanyId() {
+	public String getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(int companyId) {
+	public void setCompanyId(String companyId) {
 		this.companyId = companyId;
 	}
 }
