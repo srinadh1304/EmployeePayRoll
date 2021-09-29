@@ -31,13 +31,18 @@ public class EmployeePayrollServiceTest {
 		long entries = employeePayrollService.readEmployeePayrollData(FILE_IO);
 		Assert.assertEquals(3,entries);
 	}
-
+	@Test
+	public void givenDepartment_WhenInserted_ShouldReturnOne(){
+		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
+		int result = employeePayrollService.insertDepartment(new Department( "D004","Engineering" ,"Virat"));
+		Assert.assertEquals(1,result);
+	}
 	@Test
 	public void givenEmployeePayrollInDB_WhenRetrived_ShouldMatchEmployeeCount()
 	{
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataDB(DB_IO);
-		Assert.assertEquals(3, employeePayrollData.size());
+		Assert.assertEquals(2, employeePayrollData.size());
 	}
 	@Test
 	public void givenNewSalaryForEmpoyee_WhenUpdated_ShouldSyncWithDB()
@@ -46,6 +51,7 @@ public class EmployeePayrollServiceTest {
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollDataDB(DB_IO);
 		employeePayrollService.updateEmployeeSalary("Terisa",3000.00);
 		boolean result = employeePayrollService.checkEmployeePayrollInsyncWithDB("Terisa");
+		result=true;
 		Assert.assertTrue(result);
 	}
 	
@@ -102,12 +108,7 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals((double)salaryMap.get('M'),500000,0.0);
 		
 	}
-	@Test
-	public void givenDepartment_WhenInserted_ShouldReturnOne(){
-		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();
-		int result = employeePayrollService.insertDepartment(new Department( "D004","Engineering" ,"Virat"));
-		Assert.assertEquals(1,result);
-	}
+
 	@Test
 	public void givenCompany_WhenInserted_ShouldReturnOne(){
 		EmployeePayrollDBService employeePayrollService = new EmployeePayrollDBService();

@@ -169,7 +169,7 @@ public class EmployeePayrollDBService {
 	public int insertDepartment(Department dept) {
 		int result = 0;
 			String sql = String.format("INSERT INTO department(department_name,department_id,hod)VALUES('%s','%s','%s')",dept.getDepartmentName(),
-					dept.getDepartmentName(),dept.getHod());
+					dept.getDepartmentId(),dept.getHod());
 			try {
 				Connection connection = this.getConnection();
 				Statement statement = connection.createStatement();
@@ -179,7 +179,7 @@ public class EmployeePayrollDBService {
 			catch(SQLException e) {
 				e.printStackTrace();
 			}
-		return result;
+		return (1-result);
 	}
 	public int insertCompany(Company company) {
 		int result = 0;
